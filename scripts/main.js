@@ -8,6 +8,10 @@ var Navigation  		 = ReactRouter.Navigation;
 var History				 = ReactRouter.History;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
+//firebase
+var Rebase = require('re-base');
+var base = Rebase.createClass('https://crackling-inferno-7746.firebaseio.com/');
+
 var h = require('./helpers.js');
 
 
@@ -23,6 +27,23 @@ var App = React.createClass({
 			order : {}
 		}
 	},
+    componentDidMount : function() {
+        base.syncState(this.props.params.storeId + '/fishes', {
+            context : this,
+            state : 'fishes'
+        });
+
+        var localStorageRef = localStorage.getItem('order-' + this.props.params.storeId);
+
+        if(localStorageRef){
+            this.setState({
+                order : JSON.parse(localStorageRef)
+            });
+        }
+    },
+    componentWillUpdate : function(nextProps, nextState){
+        localStorage.setItem('order-' + this.props.params.storeId, JSON.stringify(nextState.order));
+    },
 	addToOrder : function(key){
 		this.state.order[key] = this.state.order[key] + 1 || 1;
 		this.setState({order : this.state.order});
@@ -132,7 +153,6 @@ var AddFishForm = React.createClass({
 
 var Header = React.createClass({
 	render : function() {
-		console.log(this.props);
 		return (
 			<header className="top">
 				<h1>Catch
@@ -162,7 +182,7 @@ var Order = React.createClass({
 			return <li key={key}>Sorry, no longer available</li>
 		}
 		return (
-			<li>
+			<li key={key}>
 				{count}lbs
 				{fish.name}
 				<span className="price">{h.formatPrice(count * fish.price)}</span>
