@@ -3,7 +3,6 @@ StorePicker
  */
 
 import React from 'react';
-import { Navigation } from 'react-router';
 import { History } from 'react-router';
 import helpers from '../helpers';
 

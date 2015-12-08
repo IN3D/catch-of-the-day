@@ -10,7 +10,7 @@ import { createHistory } from 'history';
     Import Components
  */
 
-import App from './components/App'
+import App from './components/App';
 import NotFound from './components/NotFound';
 import StorePicker from './components/StorePicker';
 
